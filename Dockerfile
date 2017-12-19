@@ -4,7 +4,7 @@
 FROM php:7.0.26-fpm
 #RUN apk add --update add \
 #docker run --rm php:7.0.26-fpm php -i | grep zip
-MAINTAINER Mark Shust <lukas@beecom.io>
+MAINTAINER Lukas Beranek <lukas@beecom.io>
 
 RUN apt-get update && apt-get install -y \
 #  cron \
@@ -35,6 +35,11 @@ RUN docker-php-ext-install \
 
 RUN curl -sS https://getcomposer.org/installer | \
   php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN curl -O https://files.magerun.net/n98-magerun2.phar \
+    && chmod +x ./n98-magerun2.phar \
+    && mv ./n98-magerun2.phar /usr/local/bin/
+
 
 ENV PHP_MEMORY_LIMIT 2G
 ENV PHP_PORT 9000
