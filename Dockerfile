@@ -57,5 +57,5 @@ COPY bin/* /usr/local/bin/
 
 WORKDIR /var/www/html
 
-CMD ["/usr/local/bin/start"]
+RUN ["chmod", "+x", "/usr/local/bin/start"]
 
