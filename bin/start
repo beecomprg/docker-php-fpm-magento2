@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Setup config
 /usr/local/bin/setup-config
 

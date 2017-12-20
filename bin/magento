@@ -8,3 +8,5 @@ $cmd = 'su -c "/usr/local/bin/php /var/www/html/bin/magento-php ' . $args . '" -
 
 passthru($cmd, $result);
 exit($result);
+
+
