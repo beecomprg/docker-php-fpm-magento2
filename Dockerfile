@@ -38,7 +38,7 @@ RUN curl -sS https://getcomposer.org/installer | \
 
 RUN curl -O https://files.magerun.net/n98-magerun2.phar \
     && chmod +x ./n98-magerun2.phar \
-    && mv ./n98-magerun2.phar /usr/local/bin/
+    && mv ./n98-magerun2.phar /usr/local/bin/magerun2
 
 
 ENV PHP_MEMORY_LIMIT 2G
