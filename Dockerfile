@@ -28,15 +28,15 @@ RUN docker-php-ext-install \
   intl
 
 #cleanup
-RUN apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev libxml2-dev libmcrypt-dev libxslt-dev
+RUN apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev
 
-#RUN curl -sS https://getcomposer.org/installer | \
-#  php -- --install-dir=/usr/local/bin --filename=composer
-#
-#RUN curl -O https://files.magerun.net/n98-magerun2.phar \
-#    && chmod +x ./n98-magerun2.phar \
-#    && mv ./n98-magerun2.phar /usr/local/bin/magerun2
-#
+RUN curl -sS https://getcomposer.org/installer | \
+  php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN curl -O https://files.magerun.net/n98-magerun2.phar \
+    && chmod +x ./n98-magerun2.phar \
+    && mv ./n98-magerun2.phar /usr/local/bin/magerun2
+
 
 ENV PHP_MEMORY_LIMIT 2G
 ENV PHP_PORT 9000
