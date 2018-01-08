@@ -1,35 +1,35 @@
 #http://devdocs.magento.com/guides/v2.1/install-gde/system-requirements-tech.html
-FROM php:7.0.26-fpm-alpine3.4
+FROM php:7.0-fpm-alpine
 
 MAINTAINER Lukas Beranek <lukas@beecom.io>
 
-#RUN apt-get update && apt-get install -y \
-##  cron \ TODO FIXME resolve crons
-#  libfreetype6-dev \
-#  libicu-dev \
-#  libjpeg62-turbo-dev \
-#  libmcrypt-dev \
-#  libpng12-dev \
-#  libxslt1-dev \
-#  mysql-client \
-#  zip \
-#  git
-#
-#RUN docker-php-ext-configure \
-#  gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
-#
-#RUN docker-php-ext-install \
-#  bcmath \
-#  gd \
-#  intl \
-#  mbstring \
-#  mcrypt \
-#  opcache \
-#  pdo_mysql \
-#  soap \
-#  xsl \
-#  zip
-#
+#BUILD dependencies
+RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev \
+    libpng-dev libjpeg-turbo-dev icu-dev libxml2 libxml2-dev libmcrypt-dev \
+    libxslt-dev
+
+RUN  docker-php-ext-configure gd \
+    --with-gd \
+    --with-freetype-dir=/usr/include/ \
+    --with-png-dir=/usr/include/ \
+    --with-jpeg-dir=/usr/include/ && \
+  NPROC=$(getconf _NPROCESSORS_ONLN) && \
+  docker-php-ext-install -j${NPROC} gd
+
+RUN docker-php-ext-install \
+  bcmath \
+#  mbstring \ #already loaded
+  opcache \
+  pdo_mysql \
+  soap \
+  zip \
+  mcrypt \
+  xsl \
+  intl
+
+#cleanup
+RUN apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev libxml2-dev libmcrypt-dev libxslt-dev
+
 #RUN curl -sS https://getcomposer.org/installer | \
 #  php -- --install-dir=/usr/local/bin --filename=composer
 #
