@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Setup config
 /usr/local/bin/setup-config
 
