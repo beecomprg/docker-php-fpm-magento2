@@ -3,6 +3,8 @@ FROM php:7.1-fpm-alpine
 
 MAINTAINER Lukas Beranek <lukas@beecom.io>
 
+ENV REDIS_VERSION 4.0.2
+
 #BUILD dependencies
 RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev \
     libpng-dev libjpeg-turbo-dev icu-dev libxml2 libxml2-dev libmcrypt-dev \
@@ -18,6 +20,12 @@ RUN  docker-php-ext-configure gd \
   NPROC=$(getconf _NPROCESSORS_ONLN) && \
   docker-php-ext-install -j${NPROC} gd
 
+RUN curl -L -o /tmp/redis.tar.gz https://github.com/phpredis/phpredis/archive/$REDIS_VERSION.tar.gz \
+    && tar xfz /tmp/redis.tar.gz \
+    && rm -r /tmp/redis.tar.gz \
+    && mkdir -p /usr/src/php/ext \
+    && mv phpredis-* /usr/src/php/ext/redis
+
 RUN docker-php-ext-install \
   bcmath \
 #  mbstring \ #already loaded
@@ -27,7 +35,8 @@ RUN docker-php-ext-install \
   zip \
   mcrypt \
   xsl \
-  intl
+  intl \
+  redis
 
 #cleanup
 RUN apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev
