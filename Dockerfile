@@ -1,5 +1,5 @@
 #http://devdocs.magento.com/guides/v2.1/install-gde/system-requirements-tech.html
-FROM php:7.1-fpm-alpine
+FROM php:7.1.19-fpm-alpine
 
 MAINTAINER Lukas Beranek <lukas@beecom.io>
 
