@@ -1,9 +1,9 @@
 #http://devdocs.magento.com/guides/v2.1/install-gde/system-requirements-tech.html
-FROM php:7.1.19-fpm-alpine
+FROM php:7.2.12-fpm-alpine
 
 MAINTAINER Lukas Beranek <lukas@beecom.io>
 
-ENV REDIS_VERSION 4.0.2
+ENV REDIS_VERSION 4.2.0
 
 #BUILD dependencies
 RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev \
@@ -28,12 +28,10 @@ RUN curl -L -o /tmp/redis.tar.gz https://github.com/phpredis/phpredis/archive/$R
 
 RUN docker-php-ext-install \
   bcmath \
-#  mbstring \ #already loaded
   opcache \
   pdo_mysql \
   soap \
   zip \
-  mcrypt \
   xsl \
   intl \
   redis
