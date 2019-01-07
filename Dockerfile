@@ -35,6 +35,7 @@ RUN docker-php-ext-install \
   xsl \
   intl \
   redis \
+  mcrypt \
   pcntl
 
 #cleanup
