@@ -1,5 +1,5 @@
 #http://devdocs.magento.com/guides/v2.1/install-gde/system-requirements-tech.html
-FROM php:7.2.12-fpm-alpine
+FROM php:7.1.25-fpm-alpine
 
 MAINTAINER Lukas Beranek <lukas@beecom.io>
 
@@ -34,7 +34,8 @@ RUN docker-php-ext-install \
   zip \
   xsl \
   intl \
-  redis
+  redis \
+  pcntl
 
 #cleanup
 RUN apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev
