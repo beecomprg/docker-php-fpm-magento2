@@ -1,10 +1,11 @@
 #http://devdocs.magento.com/guides/v2.1/install-gde/system-requirements-tech.html
-FROM php:7.1.27-fpm-alpine
+FROM php:7.2.17-fpm-alpine3.9
 
 MAINTAINER Lukas Beranek <lukas@beecom.io>
 
 ENV APCU_VERSION 5.1.17
 ENV REDIS_VERSION 4.2.0
+ENV MCRYPT 1.0.2
 
 #BUILD dependencies
 RUN apk add --no-cache --no-cache --virtual .build-deps \
@@ -38,12 +39,13 @@ RUN docker-php-ext-install \
   xsl \
   intl \
   redis \
-  mcrypt \
   pcntl
 
 RUN pecl install \
-    apcu-${APCU_VERSION} && \
-    docker-php-ext-enable --ini-name 20-apcu.ini apcu
+    apcu-${APCU_VERSION} \
+    mcrypt-${MCRYPT} && \
+    docker-php-ext-enable --ini-name 20-apcu.ini apcu && \
+    docker-php-ext-enable --ini-name 30-mcrypt.ini mcrypt
 
 #cleanup
 RUN apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev .build-deps
