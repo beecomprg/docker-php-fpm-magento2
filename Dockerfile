@@ -1,5 +1,5 @@
 #http://devdocs.magento.com/guides/v2.1/install-gde/system-requirements-tech.html
-FROM php:7.1.27-fpm-alpine
+FROM php:7.1.30-fpm-alpine
 
 MAINTAINER Lukas Beranek <lukas@beecom.io>
 
@@ -7,7 +7,7 @@ ENV APCU_VERSION 5.1.17
 ENV REDIS_VERSION 4.2.0
 
 #BUILD dependencies
-RUN apk add --no-cache --no-cache --virtual .build-deps \
+RUN apk add --no-cache --virtual .build-deps \
     $PHPIZE_DEPS \
     freetype libpng libjpeg-turbo freetype-dev \
     libpng-dev libjpeg-turbo-dev icu-dev libxml2 libxml2-dev libmcrypt-dev \
@@ -44,6 +44,16 @@ RUN docker-php-ext-install \
 RUN pecl install \
     apcu-${APCU_VERSION} && \
     docker-php-ext-enable --ini-name 20-apcu.ini apcu
+
+RUN export NEWRELIC_VERSION=$(curl -sS https://download.newrelic.com/php_agent/release/ | sed -n 's/.*>\(.*linux\).tar.gz<.*/\1/p') && \
+    curl -L -o newrelic.tar.gz https://download.newrelic.com/php_agent/release/$NEWRELIC_VERSION-musl.tar.gz && \
+    gzip -dc newrelic.tar.gz | tar xf - && \
+    cd $NEWRELIC_VERSION-musl && \
+    NR_INSTALL_SILENT=true NR_INSTALL_USE_CP_NOT_LN=true ./newrelic-install install && \
+    mv /etc/php7/conf.d/newrelic.ini /etc/php7/conf.d/20_newrelic.ini && \
+    cd .. && \
+    rm -rf $NEWRELIC_VERSION-musl && \
+    rm newrelic.tar.gz
 
 #cleanup
 RUN apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev .build-deps

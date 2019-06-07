@@ -1,5 +1,5 @@
 #http://devdocs.magento.com/guides/v2.1/install-gde/system-requirements-tech.html
-FROM php:7.2.17-fpm-alpine3.9
+FROM php:7.2.19-fpm-alpine3.9
 
 MAINTAINER Lukas Beranek <lukas@beecom.io>
 
@@ -8,7 +8,7 @@ ENV REDIS_VERSION 4.2.0
 ENV MCRYPT 1.0.2
 
 #BUILD dependencies
-RUN apk add --no-cache --no-cache --virtual .deps \
+RUN apk add --no-cache --virtual .deps \
     $PHPIZE_DEPS \
     freetype libpng libjpeg-turbo freetype-dev \
     libpng-dev libjpeg-turbo-dev icu-dev libxml2 libxml2-dev libmcrypt-dev \
