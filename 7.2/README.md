@@ -1,1 +1,0 @@
-# docker-php-fpm-magento2
