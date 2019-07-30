@@ -53,6 +53,7 @@ RUN docker-php-ext-install \
   intl \
   redis \
   mcrypt \
+  exif \
   pcntl && \
   pecl install \
   apcu-${APCU_VERSION} && \
