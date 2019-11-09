@@ -1,9 +1,10 @@
-FROM php:7.3.11-fpm-stretch
+FROM php:7.2.24-fpm-stretch
 
 MAINTAINER Lukas Beranek <lukas@beecom.io>
 
-ENV APCU_VERSION 5.1.17
+ENV APCU_VERSION 5.1.18
 ENV REDIS_VERSION 4.2.0
+ENV MCRYPT_VERSION 1.0.3
 ENV PHP_MEMORY_LIMIT 2G
 ENV PHP_PORT 9000
 ENV PHP_PM dynamic
@@ -60,7 +61,7 @@ RUN docker-php-ext-install \
   pecl install \
   apcu-${APCU_VERSION} && \
   docker-php-ext-enable --ini-name 20-apcu.ini apcu && \
-  pecl install mcrypt-1.0.1 && \
+  pecl install mcrypt-${MCRYPT_VERSION} && \
   docker-php-ext-enable \
   mcrypt \
   sodium
