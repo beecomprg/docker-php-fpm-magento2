@@ -1,4 +1,4 @@
-FROM php:7.2.2-fpm-stretch
+FROM php:7.3.11-fpm-stretch
 
 MAINTAINER Lukas Beranek <lukas@beecom.io>
 
@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxml2-dev \
     patch \
     libzip-dev \
+    libsodium-dev \
     zlib1g-dev \
     libxslt-dev \
     libfreetype6-dev \
@@ -44,13 +45,6 @@ RUN curl -L -o /tmp/redis.tar.gz https://github.com/phpredis/phpredis/archive/$R
     && mkdir -p /usr/src/php/ext \
     && mv phpredis-* /usr/src/php/ext/redis
 
-RUN wget https://download.libsodium.org/libsodium/releases/LATEST.tar.gz
-RUN tar xvzf LATEST.tar.gz
-RUN cd libsodium-stable && \
-    ./configure && \
-    make && make check && \
-    make install
-
 RUN docker-php-ext-install \
   bcmath \
   opcache \
@@ -60,14 +54,16 @@ RUN docker-php-ext-install \
   xsl \
   intl \
   redis \
-  exif \
   sodium \
+  exif \
   pcntl && \
   pecl install \
   apcu-${APCU_VERSION} && \
   docker-php-ext-enable --ini-name 20-apcu.ini apcu && \
   pecl install mcrypt-1.0.1 && \
-  docker-php-ext-enable mcrypt
+  docker-php-ext-enable \
+  mcrypt \
+  sodium
 
 RUN \
   export NEWRELIC_VERSION=$(curl -sS https://download.newrelic.com/php_agent/release/ | sed -n 's/.*>\(.*linux\).tar.gz<.*/\1/p') && \
