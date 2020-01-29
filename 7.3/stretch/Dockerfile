@@ -1,4 +1,4 @@
-FROM php:7.3.12-fpm-stretch
+FROM php:7.3.14-fpm-stretch
 
 MAINTAINER Lukas Beranek <lukas@beecom.io>
 
