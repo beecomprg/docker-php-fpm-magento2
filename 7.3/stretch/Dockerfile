@@ -1,4 +1,4 @@
-FROM php:7.3.17-fpm-stretch
+FROM php:7.3.18-fpm-stretch
 
 MAINTAINER Lukas Beranek <lukas@beecom.io>
 
@@ -61,6 +61,7 @@ RUN docker-php-ext-install \
   intl \
   redis \
   sodium \
+  sockets \
   exif \
   pcntl && \
   pecl install \
@@ -69,7 +70,8 @@ RUN docker-php-ext-install \
   pecl install mcrypt-${MCRYPT_VERSION} && \
   docker-php-ext-enable \
   mcrypt \
-  sodium
+  sodium \
+  sockets
 
 RUN \
   export NEWRELIC_VERSION=$(curl -sS https://download.newrelic.com/php_agent/release/ | sed -n 's/.*>\(.*linux\).tar.gz<.*/\1/p') && \
@@ -89,6 +91,3 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY conf/php.ini /usr/local/etc/php/conf.d/10_php.ini
 COPY conf/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 COPY ./conf/30_newrelic.ini /usr/local/etc/php/conf.d/30_newrelic.ini
-
-
-RUN rm -rf /var/lib/apt/lists/*
