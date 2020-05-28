@@ -37,21 +37,19 @@ RUN apt-get update && apt-get install -y gnupg2 && \
     git && \
     rm -rf /var/lib/apt/lists/*
 
-RUN  docker-php-ext-configure gd \
-    --with-gd \
-    --with-freetype-dir=/usr/include/ \
-    --with-png-dir=/usr/include/ \
-    --with-jpeg-dir=/usr/include/ && \
-  NPROC=$(getconf _NPROCESSORS_ONLN) && \
-  docker-php-ext-install -j${NPROC} gd
-
 RUN curl -L -o /tmp/redis.tar.gz https://github.com/phpredis/phpredis/archive/$REDIS_VERSION.tar.gz \
     && tar xfz /tmp/redis.tar.gz \
     && rm -r /tmp/redis.tar.gz \
     && mkdir -p /usr/src/php/ext \
     && mv phpredis-* /usr/src/php/ext/redis
 
-RUN docker-php-ext-install \
+RUN docker-php-ext-configure gd \
+    --with-gd \
+    --with-freetype-dir=/usr/include/ \
+    --with-png-dir=/usr/include/ \
+    --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) \
+  gd \
   bcmath \
   opcache \
   pdo_mysql \
@@ -62,25 +60,23 @@ RUN docker-php-ext-install \
   redis \
   sodium \
   exif \
+  sockets \
   pcntl && \
   pecl install \
   apcu-${APCU_VERSION} && \
   docker-php-ext-enable --ini-name 20-apcu.ini apcu && \
   pecl install mcrypt-${MCRYPT_VERSION} && \
   docker-php-ext-enable \
-  mcrypt \
-  sodium \
-  sockets
+  mcrypt
 
-RUN \
-  export NEWRELIC_VERSION=$(curl -sS https://download.newrelic.com/php_agent/release/ | sed -n 's/.*>\(.*linux\).tar.gz<.*/\1/p') && \
-      curl -L -o newrelic.tar.gz https://download.newrelic.com/php_agent/release/$NEWRELIC_VERSION.tar.gz && \
-      gzip -dc newrelic.tar.gz | tar xf - && \
-      cd $NEWRELIC_VERSION && \
-      NR_INSTALL_SILENT=true NR_INSTALL_USE_CP_NOT_LN=true ./newrelic-install install && \
-      cd .. && \
-      rm -rf $NEWRELIC_VERSION && \
-      rm newrelic.tar.gz
+RUN export NEWRELIC_VERSION=$(curl -sS https://download.newrelic.com/php_agent/release/ | sed -n 's/.*>\(.*linux\).tar.gz<.*/\1/p') && \
+    curl -L -o newrelic.tar.gz https://download.newrelic.com/php_agent/release/$NEWRELIC_VERSION.tar.gz && \
+    gzip -dc newrelic.tar.gz | tar xf - && \
+    cd $NEWRELIC_VERSION && \
+    NR_INSTALL_SILENT=true NR_INSTALL_USE_CP_NOT_LN=true ./newrelic-install install && \
+    cd .. && \
+    rm -rf $NEWRELIC_VERSION && \
+    rm newrelic.tar.gz
 
 RUN curl -sS https://getcomposer.org/installer | \
   php -- --install-dir=/usr/local/bin --filename=composer
