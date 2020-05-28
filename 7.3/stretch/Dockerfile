@@ -61,7 +61,6 @@ RUN docker-php-ext-install \
   intl \
   redis \
   sodium \
-  sockets \
   exif \
   pcntl && \
   pecl install \
