@@ -69,14 +69,15 @@ RUN docker-php-ext-configure gd \
   docker-php-ext-enable \
   mcrypt
 
-RUN export NEWRELIC_VERSION=$(curl -sS https://download.newrelic.com/php_agent/release/ | sed -n 's/.*>\(.*linux\).tar.gz<.*/\1/p') && \
-    curl -L -o newrelic.tar.gz https://download.newrelic.com/php_agent/release/$NEWRELIC_VERSION.tar.gz && \
-    gzip -dc newrelic.tar.gz | tar xf - && \
-    cd $NEWRELIC_VERSION && \
-    NR_INSTALL_SILENT=true NR_INSTALL_USE_CP_NOT_LN=true ./newrelic-install install && \
-    cd .. && \
-    rm -rf $NEWRELIC_VERSION && \
-    rm newrelic.tar.gz
+RUN export NEWRELIC_VERSION=$(curl -sS https://download.newrelic.com/php_agent/release/ | sed -n 's/.*>\(.*linux\).tar.gz<.*/\1/p') \
+    && curl -L -o newrelic.tar.gz https://download.newrelic.com/php_agent/release/$NEWRELIC_VERSION.tar.gz \
+    && gzip -dc newrelic.tar.gz | tar xf - \
+    && cd $NEWRELIC_VERSION \
+    && NR_INSTALL_SILENT=true NR_INSTALL_USE_CP_NOT_LN=true ./newrelic-install install \
+    && cd .. \
+    && rm -rf $NEWRELIC_VERSION \
+    && rm newrelic.tar.gz \
+    && mkdir -p /var/log/newrelic/ && touch /var/log/newrelic/newrelic-daemon.log && chmod 666 /var/log/newrelic/newrelic-daemon.log \
 
 RUN curl -sS https://getcomposer.org/installer | \
   php -- --install-dir=/usr/local/bin --filename=composer
