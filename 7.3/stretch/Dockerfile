@@ -73,7 +73,7 @@ RUN export NEWRELIC_VERSION=$(curl -sS https://download.newrelic.com/php_agent/r
     && cd .. \
     && rm -rf $NEWRELIC_VERSION \
     && rm newrelic.tar.gz \
-    && mkdir -p /var/log/newrelic/ && touch /var/log/newrelic/newrelic-daemon.log && chmod 666 /var/log/newrelic/newrelic-daemon.log \
+    && mkdir -p /var/log/newrelic/ && touch /var/log/newrelic/newrelic-daemon.log && chmod 666 /var/log/newrelic/newrelic-daemon.log
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
