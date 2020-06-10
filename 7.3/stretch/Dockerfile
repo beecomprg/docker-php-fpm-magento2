@@ -13,29 +13,25 @@ ENV PHP_PM_START_SERVERS 10
 ENV PHP_PM_MIN_SPARE_SERVERS 4
 ENV PHP_PM_MAX_SPARE_SERVERS 10
 
-RUN apt-get update && apt-get install -y gnupg2 && \
-    export GCSFUSE_REPO=gcsfuse-stretch && \
-    echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | tee /etc/apt/sources.list.d/gcsfuse.list && \
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-    gcsfuse \
-    wget \
-    libxml2 \
-    libxml2-dev \
-    patch \
-    libzip-dev \
-    libsodium-dev \
-    zlib1g-dev \
-    libxslt-dev \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    libmcrypt-dev \
-    libpng-dev \
-    unzip \
-    procps \
-    git && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt update \
+    && apt install -y --no-install-recommends \
+      wget \
+      libxml2 \
+      libxml2-dev \
+      patch \
+      libzip-dev \
+      libsodium-dev \
+      zlib1g-dev \
+      libxslt-dev \
+      libfreetype6-dev \
+      libjpeg62-turbo-dev \
+      libmcrypt-dev \
+      libpng-dev \
+      unzip \
+      procps \
+      git \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/cache/apk/* && rm -rf /tmp/* /var/tmp/*
 
 RUN curl -L -o /tmp/redis.tar.gz https://github.com/phpredis/phpredis/archive/$REDIS_VERSION.tar.gz \
     && tar xfz /tmp/redis.tar.gz \
@@ -49,25 +45,25 @@ RUN docker-php-ext-configure gd \
     --with-png-dir=/usr/include/ \
     --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) \
-  gd \
-  bcmath \
-  opcache \
-  pdo_mysql \
-  soap \
-  zip \
-  xsl \
-  intl \
-  redis \
-  sodium \
-  exif \
-  sockets \
-  pcntl && \
-  pecl install \
-  apcu-${APCU_VERSION} && \
-  docker-php-ext-enable --ini-name 20-apcu.ini apcu && \
-  pecl install mcrypt-${MCRYPT_VERSION} && \
-  docker-php-ext-enable \
-  mcrypt
+      gd \
+      bcmath \
+      opcache \
+      pdo_mysql \
+      soap \
+      zip \
+      xsl \
+      intl \
+      redis \
+      sodium \
+      exif \
+      sockets \
+      pcntl && \
+      pecl install \
+      apcu-${APCU_VERSION} && \
+      docker-php-ext-enable --ini-name 20-apcu.ini apcu && \
+      pecl install mcrypt-${MCRYPT_VERSION} && \
+      docker-php-ext-enable \
+      mcrypt
 
 RUN export NEWRELIC_VERSION=$(curl -sS https://download.newrelic.com/php_agent/release/ | sed -n 's/.*>\(.*linux\).tar.gz<.*/\1/p') \
     && curl -L -o newrelic.tar.gz https://download.newrelic.com/php_agent/release/$NEWRELIC_VERSION.tar.gz \
@@ -79,8 +75,7 @@ RUN export NEWRELIC_VERSION=$(curl -sS https://download.newrelic.com/php_agent/r
     && rm newrelic.tar.gz \
     && mkdir -p /var/log/newrelic/ && touch /var/log/newrelic/newrelic-daemon.log && chmod 666 /var/log/newrelic/newrelic-daemon.log \
 
-RUN curl -sS https://getcomposer.org/installer | \
-  php -- --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
