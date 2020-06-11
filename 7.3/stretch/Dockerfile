@@ -70,6 +70,7 @@ RUN export NEWRELIC_VERSION=$(curl -sS https://download.newrelic.com/php_agent/r
     && gzip -dc newrelic.tar.gz | tar xf - \
     && cd $NEWRELIC_VERSION \
     && NR_INSTALL_SILENT=true NR_INSTALL_USE_CP_NOT_LN=true ./newrelic-install install \
+    && rm /usr/local/etc/php/conf.d/newrelic.ini \
     && cd .. \
     && rm -rf $NEWRELIC_VERSION \
     && rm newrelic.tar.gz \
@@ -81,4 +82,3 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 COPY conf/php.ini /usr/local/etc/php/conf.d/10_php.ini
 COPY conf/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
-COPY ./conf/30_newrelic.ini /usr/local/etc/php/conf.d/30_newrelic.ini
